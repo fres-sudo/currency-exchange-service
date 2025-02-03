@@ -1,22 +1,26 @@
-# Use the official .NET SDK image to build the application
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
+
+# This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["CurrencyExchangeService.csproj", "./"]
+RUN dotnet restore "CurrencyExchangeService.csproj"
+COPY . .
+WORKDIR "/src"
+RUN dotnet build "CurrencyExchangeService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# This stage is used to publish the service project to be copied to the final stage
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./CurrencyExchangeService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+FROM base AS final
 WORKDIR /app
-
-# Copy the csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copy the remaining source code and build the application
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Use the official .NET runtime image to run the application
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app/out .
-
-# Expose the port the application runs on
-EXPOSE 5227
-
-# Run the application
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "CurrencyExchangeService.dll"]
