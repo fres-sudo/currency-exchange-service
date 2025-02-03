@@ -1,0 +1,8 @@
+services:
+  currencyexchangeservice:
+    image: currencyexchangeservice:latest
+    build: .
+    ports:
+      - "5227:5227"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
