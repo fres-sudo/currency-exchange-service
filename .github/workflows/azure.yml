@@ -37,7 +37,7 @@ jobs:
       - name: Build and push container image to Azure Container Registry
         uses: docker/build-push-action@v6
         with:
-          file: ./CurrencyExchangeService/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_APP_NAME }}:latest
 
