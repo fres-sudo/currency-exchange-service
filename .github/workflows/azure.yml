@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  AZURE_CONTAINER_REGISTRY: currencyexchangeservice
+  AZURE_CONTAINER_REGISTRY: currencyexchangeserviceregistry
   CONTAINER_APP_NAME: currency-exchange-service
   AZURE_WEB_APP_NAME: currency-exchange-service
   RESOURCE_GROUP: Uni

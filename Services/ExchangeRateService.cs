@@ -12,7 +12,6 @@ namespace CurrencyExchangeService.Services
     public async Task<ExchangeRateResponse> GetExchangeRatesAsync(string baseCurrency)
     {
       var response = await _httpClient.GetStringAsync($"{_baseUrl}/{_apiKey}/latest/{baseCurrency}");
-      Console.WriteLine(response);
       var parsedResponse = JsonSerializer.Deserialize<ExchangeRateResponse>(response);
 
       if (parsedResponse?.ConversionRates == null)
