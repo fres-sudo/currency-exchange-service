@@ -1,3 +1,4 @@
+using CurrencyExchangeService.Middlewares;
 using CurrencyExchangeService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseDeveloperExceptionPage();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

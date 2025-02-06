@@ -20,10 +20,6 @@ namespace CurrencyExchangeService.Controllers
     public async Task<IActionResult> GetExchangeRates([FromQuery] string baseCurrency)
     {
       var rates = await _exchangeRateService.GetExchangeRatesAsync(baseCurrency);
-      if (rates == null)
-      {
-        return BadRequest("Invalid base currency");
-      }
       return Ok(rates);
     }
 
@@ -41,10 +37,6 @@ namespace CurrencyExchangeService.Controllers
           request.ToCurrency,
           request.Amount
       );
-      if (result == null)
-      {
-        return BadRequest("Invalid currency conversion request");
-      }
       return Ok(result);
     }
   }
