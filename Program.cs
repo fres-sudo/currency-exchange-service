@@ -8,12 +8,9 @@ builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>();
 
 var app = builder.Build();
 
- if (app.Environment.IsDevelopment())
- {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
- }
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
