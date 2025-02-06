@@ -6,6 +6,7 @@ Currency Exchange Service is a .NET 8.0 web API that provides real-time currency
 
 - **Fetch Exchange Rates**: Get the latest exchange rates for various currencies.
 - **Currency Conversion**: Convert amounts from one currency to another.
+- **Error Handling**: Global exception handling middleware for consistent error responses.
 
 ## Endpoints
 
@@ -29,6 +30,26 @@ Currency Exchange Service is a .NET 8.0 web API that provides real-time currency
   }
   ```
 - **Response**: Converted amount.
+
+## Error Handling
+
+The service implements a global exception middleware that handles various types of errors:
+
+- **InvalidCurrencyException**: Returns 400 Bad Request when invalid currency codes are provided
+- **ApiException**: Returns 503 Service Unavailable when external API calls fail
+- **Other Exceptions**: Returns 500 Internal Server Error
+
+Error Response Format:
+
+```json
+{
+	"type": "ExceptionType",
+	"message": "Error message",
+	"statusCode": 400,
+	"timestamp": "2024-01-01T12:00:00Z",
+	"path": "/api/endpoint"
+}
+```
 
 ## Getting Started
 
@@ -71,7 +92,7 @@ docker run -p 8080:8080 currency-exchange-service
 
 ## Deployment
 
-This project includes a **GitHub Actions** workflow for building and deploying the service to **Azure**. The workflow is defined in``azure.yml`.
+This project includes a **GitHub Actions** workflow for building and deploying the service to **Azure**. The workflow is defined in `azure.yml`.
 
 ## Configuration
 
