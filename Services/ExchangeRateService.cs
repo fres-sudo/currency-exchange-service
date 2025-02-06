@@ -11,18 +11,32 @@ namespace CurrencyExchangeService.Services
 
     public async Task<ExchangeRateResponse> GetExchangeRatesAsync(string baseCurrency)
     {
-      var response = await _httpClient.GetStringAsync($"{_baseUrl}/{_apiKey}/latest/{baseCurrency}");
-      var parsedResponse = JsonSerializer.Deserialize<ExchangeRateResponse>(response);
+            try
+            {
+                var response = await _httpClient.GetAsync($"{_baseUrl}/{_apiKey}/latest/{baseCurrency}");
+                response.EnsureSuccessStatusCode();
 
-      if (parsedResponse?.ConversionRates == null)
-      {
-        throw new Exception("Failed to get conversion rates from API");
-      }
-      
-      return parsedResponse;
-    }
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var parsedResponse = JsonSerializer.Deserialize<ExchangeRateResponse>(responseContent);
 
-    public async Task<ConvertResponse> ConvertCurrencyAsync(string fromCurrency, string toCurrency, decimal amount)
+                if (parsedResponse?.ConversionRates == null)
+                {
+                    throw new InvalidOperationException("Failed to get conversion rates from API");
+                }
+
+                return parsedResponse;
+            }
+            catch (HttpRequestException ex)
+            {
+                // Log the exception (logging not implemented in this example)
+                throw new Exception("Error fetching exchange rates from the API", ex);
+            }
+            catch (JsonException ex)
+            {
+                // Log the exception (logging not implemented in this example)
+                throw new Exception("Error parsing exchange rates response", ex);
+            }
+        }    public async Task<ConvertResponse> ConvertCurrencyAsync(string fromCurrency, string toCurrency, decimal amount)
     {
       var ratesResponse = await GetExchangeRatesAsync(fromCurrency);
       var rate = ratesResponse.ConversionRates.GetType()
